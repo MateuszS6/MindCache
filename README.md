@@ -1,2 +1,2 @@
-# ai-summary-api
+# MindCache
 This is a big boi project
