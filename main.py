@@ -1,13 +1,23 @@
+import os
+import time
+import logging
 from fastapi import FastAPI
 from pydantic import BaseModel
-import os
 from dotenv import load_dotenv
 from openai import OpenAI
 
 load_dotenv()
+
+# --- config ---
+MAX_INPUT_LENGTH = 1000
+MAX_REQUESTS_PER_MINUTE = 5
+RETRY_LIMIT = 2
+
+# --- setup ---
+app = FastAPI()
 api_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-app = FastAPI()
+# logging.basicConfig(level=logging.INFO)
 
 class InputText(BaseModel):
     text: str
@@ -18,6 +28,9 @@ def root():
 
 @app.post("/summarise")
 def summarise(input_text: InputText):
+    if len(input_text.text) > MAX_INPUT_LENGTH:
+        return {"error": f"Input text is too long. Please limit to {MAX_INPUT_LENGTH} characters."}
+    
     response = api_client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
