@@ -6,8 +6,8 @@ from pydantic import BaseModel
 from dotenv import load_dotenv
 from openai import OpenAI
 from database import engine
-from models import Base
 from database import SessionLocal
+from models import Base
 from models import Summary
 
 load_dotenv()
@@ -22,9 +22,10 @@ RETRY_LIMIT = 2
 # --- setup ---
 app = FastAPI()
 api_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-Base.metadata.create_all(bind=engine) # if tables don't exist, create them
+Base.metadata.create_all(bind=engine)  # if tables don't exist, create them
 
 # logging.basicConfig(level=logging.INFO)
+
 
 class InputText(BaseModel):
     text: str
@@ -38,30 +39,55 @@ def root():
 @app.post("/summarise")
 def summarise(input_text: InputText):
     if len(input_text.text) > MAX_INPUT_LENGTH:
-        return {"error": f"Input text is too long. Please limit to {MAX_INPUT_LENGTH} characters."}
-    
+        return {
+            "error": f"Input text is too long. Please limit to {MAX_INPUT_LENGTH} characters."
+        }
+
     response = api_client.chat.completions.create(
         model="gpt-4o-mini",
         messages=[
-            {"role": "system", "content": "Summarise text into short paragraph and bullet points."},
-            {"role": "user", "content": input_text.text}
-        ]
+            {
+                "role": "system",
+                "content": "Summarise text into short paragraph and bullet points.",
+            },
+            {"role": "user", "content": input_text.text},
+        ],
     )
 
     summary_text = response.choices[0].message.content
 
     db = SessionLocal()
 
-    new_summary = Summary(
-        input=input_text.text,
-        output=summary_text
-    )
+    new_summary = Summary(input=input_text.text, output=summary_text)
 
     db.add(new_summary)
     db.commit()
     db.close()
 
     return {"summary": summary_text}
+
+
+@app.get("/history")
+def history():
+    db = SessionLocal()
+
+    summaries = db.query(Summary).all()
+
+    results = []
+
+    for summary in summaries:
+        results.append(
+            {
+                "id": summary.id,
+                "input": summary.input,
+                "output": summary.output,
+                "created_at": summary.created_at,
+            }
+        )
+
+    db.close()
+
+    return results
 
 
 @app.get("/health")
