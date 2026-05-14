@@ -5,10 +5,10 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from dotenv import load_dotenv
 from openai import OpenAI
-from database import engine
-from database import SessionLocal
-from models import Base
-from models import Summary
+from src.database import engine
+from src.database import SessionLocal
+from src.models import Base
+from src.models import Summary
 
 load_dotenv()
 
@@ -56,13 +56,13 @@ def summarise(input_text: InputText):
 
     summary_text = response.choices[0].message.content
 
-    db = SessionLocal()
+    db = SessionLocal()  # create a new database session
 
     new_summary = Summary(input=input_text.text, output=summary_text)
 
-    db.add(new_summary)
-    db.commit()
-    db.close()
+    db.add(new_summary)  # add the new summary to the session
+    db.commit()  # commit the session to save the summary to the database
+    db.close()  # close the database session
 
     return {"summary": summary_text}
 

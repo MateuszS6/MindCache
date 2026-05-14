@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, Text, TIMESTAMP
 from sqlalchemy.sql import func
-from database import Base
+from src.database import Base
+
 
 class Summary(Base):
     __tablename__ = "summaries"
