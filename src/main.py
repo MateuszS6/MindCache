@@ -9,6 +9,7 @@ from src.database import engine
 from src.database import SessionLocal
 from src.models import Base
 from src.models import Summary
+from src.config import OPENAI_API_KEY
 
 load_dotenv()
 
@@ -21,7 +22,7 @@ RETRY_LIMIT = 2
 
 # --- setup ---
 app = FastAPI()
-api_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+api_client = OpenAI(api_key=OPENAI_API_KEY)
 Base.metadata.create_all(bind=engine)  # if tables don't exist, create them
 
 # logging.basicConfig(level=logging.INFO)
