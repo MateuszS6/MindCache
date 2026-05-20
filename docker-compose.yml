@@ -10,10 +10,12 @@ services:
       - .env
 
   db:
-    image: postgres
+    image: postgres:18
     restart: always
     env_file:
       - .env
+    volumes:
+      - postgres_data:/var/lib/postgresql
     ports:
       - "5432:5432"
     healthcheck:
@@ -21,3 +23,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+
+volumes:
+  postgres_data:
