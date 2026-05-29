@@ -41,12 +41,13 @@ class InputText(BaseModel):
     text: str = Field(
         ...,
         min_length=1,
-        max_length=MAX_INPUT_LENGTH,
+        max_length=MAX_INPUT_LENGTH,  # cap input length for cost effectiveness
         description="Text to summarise",
     )
 
 
 def get_db() -> Generator[Session, None, None]:
+    # FastAPI manages the DB session for the request
     db = SessionLocal()  # create a new database session
     try:
         yield db  # return the current database session to the caller
@@ -118,8 +119,8 @@ def summarise(input_text: InputText, request: Request, db: Session = Depends(get
                     },
                     {"role": "user", "content": text},
                 ],
-                max_tokens=MAX_OUTPUT_TOKENS,
-                timeout=AI_TIMEOUT_SECONDS,
+                max_tokens=MAX_OUTPUT_TOKENS,  # cap AI response for cost effectiveness
+                timeout=AI_TIMEOUT_SECONDS,  # prevent hanging if the AI service is slow
             )
 
             summary_text = response.choices[0].message.content
@@ -133,7 +134,7 @@ def summarise(input_text: InputText, request: Request, db: Session = Depends(get
             new_summary = Summary(input=text, output=summary_text)
 
             db.add(new_summary)  # add the new summary to the session
-            db.commit()  # commit the session to save the summary to the database
+            db.commit()  # commit the session to save the summary to the DB
             db.refresh(
                 new_summary
             )  # refresh the instance to get the generated ID and timestamp
@@ -147,15 +148,15 @@ def summarise(input_text: InputText, request: Request, db: Session = Depends(get
             }
 
         except HTTPException:
-            raise
+            raise  # catch any unspecified HTTPExceptions
 
         except Exception as error:
             logger.warning(
                 f"Summarise attempt {attempt + 1}/{RETRY_LIMIT} failed: {str(error)}"
-            )
+            )  # log all other Exceptions with error details
 
             if attempt == RETRY_LIMIT - 1:
-                db.rollback()
+                db.rollback()  # undo database change right after retry limit is reached
                 raise HTTPException(
                     status_code=500,
                     detail="Something went wrong when trying to generate summary. Please try again later.",
@@ -165,9 +166,17 @@ def summarise(input_text: InputText, request: Request, db: Session = Depends(get
 @app.get("/history")
 def history(limit: int = 20, db: Session = Depends(get_db)):
     if limit < 1 or limit > 100:
-        raise HTTPException(status_code=400, detail="Limit must be between 1 and 100.")
+        raise HTTPException(
+            status_code=400,
+            detail="Limit must be between 1 and 100.",
+        )
 
-    summaries = db.query(Summary).order_by(Summary.created_at.desc()).limit(limit).all()
+    summaries = (
+        db.query(Summary)
+        .order_by(Summary.created_at.desc())  # in descending order of creation date
+        .limit(limit)  # bounded
+        .all()  # return this result
+    )
 
     return [
         {
@@ -177,4 +186,4 @@ def history(limit: int = 20, db: Session = Depends(get_db)):
             "created_at": summary.created_at,
         }
         for summary in summaries
-    ]
+    ]  # return selected summaries in JSON format and according to Summary model
