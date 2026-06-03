@@ -3,8 +3,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-# --- openai ---
+# --- api keys ---
+APP_API_KEY = os.getenv("APP_API_KEY")
+
+if not APP_API_KEY:
+    raise ValueError("APP_API_KEY is not set")
+
 OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+if not OPENAI_API_KEY:
+    raise ValueError("OPENAI_API_KEY is not set")
 
 # --- main config ---
 MAX_INPUT_LENGTH = 1000

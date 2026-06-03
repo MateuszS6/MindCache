@@ -2,7 +2,7 @@ import time
 import logging
 from typing import Generator
 
-from fastapi import FastAPI, HTTPException, Request, Depends
+from fastapi import FastAPI, Header, HTTPException, Request, Depends
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from openai import OpenAI
@@ -10,6 +10,7 @@ from openai import OpenAI
 from src.database import engine, SessionLocal
 from src.models import Base, Summary
 from src.config import (
+    APP_API_KEY,
     OPENAI_API_KEY,
     MAX_INPUT_LENGTH,
     MAX_REQUESTS_PER_MINUTE,
@@ -33,10 +34,6 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-# --- in-memory rate limiter ---
-request_log: dict[str, list[float]] = {}
-
-
 class InputText(BaseModel):
     text: str = Field(
         ...,
@@ -46,6 +43,14 @@ class InputText(BaseModel):
     )
 
 
+def verify_api_key(x_api_key: str | None = Header(default=None)):
+    if x_api_key != APP_API_KEY:
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid or missing API key."
+        )
+
+
 def get_db() -> Generator[Session, None, None]:
     # FastAPI manages the DB session for the request
     db = SessionLocal()  # create a new database session
@@ -53,6 +58,10 @@ def get_db() -> Generator[Session, None, None]:
         yield db  # return the current database session to the caller
     finally:
         db.close()  # close the database session
+
+
+# --- in-memory rate limiter ---
+request_log: dict[str, list[float]] = {}
 
 
 def is_rate_limited(ip: str) -> bool:
@@ -88,7 +97,7 @@ def health():
 
 
 @app.post("/summarise")
-def summarise(input_text: InputText, request: Request, db: Session = Depends(get_db)):
+def summarise(input_text: InputText, request: Request, db: Session = Depends(get_db), _: None = Depends(verify_api_key)):
     client_ip = request.client.host if request.client else "unknown"
 
     if is_rate_limited(client_ip):
@@ -164,7 +173,7 @@ def summarise(input_text: InputText, request: Request, db: Session = Depends(get
 
 
 @app.get("/history")
-def history(limit: int = 20, db: Session = Depends(get_db)):
+def history(limit: int = 20, db: Session = Depends(get_db), _: None = Depends(verify_api_key)):
     if limit < 1 or limit > 100:
         raise HTTPException(
             status_code=400,

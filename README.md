@@ -21,6 +21,7 @@ Personally, I wanted to take my Python skills to the next level, experiment with
 - Dockerised FastAPI and PostgreSQL services
 - Persistent databse storage using Docker volumes
 - Environment variable configuration for secrets
+- Basic API key protection
 
 ## Tech Stack
 
@@ -97,6 +98,7 @@ ai-summary-api/
 Create a `.env` files in the project root.
 
 ```env
+APP_API_KEY=your_app_api_key_here
 OPENAI_API_KEY=your_openai_key_here
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=pass
@@ -148,7 +150,7 @@ This project helped me practise containerised backend development, API design, P
 ## Current Limitations
 
 - Rate limiting is currently in-memory and resets when the API restarts
-- Authentication is not yet implemented
+- Full authentication is not yet implemented
 - The API currently supports text summarisation only
 - Database migrations are not yet managed with a migration tool such as Alembic
 <!-- This section is good. It shows maturity. Do not hide limitations. Show you understand them. -->
@@ -157,7 +159,7 @@ This project helped me practise containerised backend development, API design, P
 
 - Deploy the service to AWS
 - Add a simple frontend UI
-- Add user authentication or API key protection
+- Add proper user authentication
 - Add summary modes such as short, detailed, and bullet-point summaries
 - Add tagging or search for saved summaries
 - Improve rate limiting using Redis or an API gateway
