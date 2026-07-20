@@ -1,5 +1,6 @@
 services:
   api:
+    image: mindcache-api
     build: .
     ports:
       - "8000:8000"
@@ -26,3 +27,4 @@ services:
 
 volumes:
   postgres_data:
+    name: mindcache_postgres_data

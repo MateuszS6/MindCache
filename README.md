@@ -77,19 +77,25 @@ Content-Type: application/json
 ```text
 ai-summary-api/
 │
-├── src/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── database.py
-│   ├── models.py
-│   └── config.py
+├── backend/
+│   ├── src/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   ├── database.py
+│   │   ├── models.py
+│   │   └── config.py
+│   ├── requirements.txt
+│   ├── Dockerfile
+│   ├── docker-compose.yml
+│   ├── .env.example
+│   └── .dockerignore
 │
-├── requirements.txt
-├── Dockerfile
-├── docker-compose.yml
-├── .env.example
+├── frontend/
+│   ├── src/
+│   └── .env.example
+│
 ├── .gitignore
-├── .dockerignore
+├── .gitattributes
 └── README.md
 ```
 
