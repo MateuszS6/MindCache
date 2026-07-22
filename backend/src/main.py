@@ -3,6 +3,7 @@ import logging
 from typing import Generator
 
 from fastapi import FastAPI, Header, HTTPException, Request, Depends
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 from openai import OpenAI
@@ -26,7 +27,15 @@ app = FastAPI(
     version="0.1.0",
 )
 
-api_client = OpenAI(api_key=OPENAI_API_KEY)
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+api_client = OpenAI(api_key=OPENAI_API_KEY) # instantiate OpenAI API with key
 
 Base.metadata.create_all(bind=engine)  # if tables don't exist, create them
 
