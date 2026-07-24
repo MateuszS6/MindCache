@@ -106,7 +106,7 @@ def health():
 
 
 @app.post("/summarise")
-def summarise(input_text: InputText, request: Request, db: Session = Depends(get_db), _: None = Depends(verify_api_key)):
+def summarise(input_text: InputText, request: Request, db: Session = Depends(get_db)): # API Auth Param: [, _: None = Depends(verify_api_key)]
     client_ip = request.client.host if request.client else "unknown"
 
     if is_rate_limited(client_ip):
@@ -182,7 +182,7 @@ def summarise(input_text: InputText, request: Request, db: Session = Depends(get
 
 
 @app.get("/history")
-def history(limit: int = 20, db: Session = Depends(get_db), _: None = Depends(verify_api_key)):
+def history(limit: int = 20, db: Session = Depends(get_db)): # API Auth Param: [, _: None = Depends(verify_api_key)]
     if limit < 1 or limit > 100:
         raise HTTPException(
             status_code=400,
