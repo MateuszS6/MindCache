@@ -110,6 +110,25 @@ function App() {
     }
   }
 
+  async function handleCopy() {
+    if (!summary) {
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(summary);
+    } catch (copyError) {
+      console.error(copyError);
+      setError("The summary could not be copied.");
+    }
+  }
+
+  function handleClear() {
+    setText("");
+    setSummary("");
+    setError("");
+  }
+
   return (
     <main className="app">
       {/* SUMMARY SECTION */}
@@ -133,13 +152,24 @@ function App() {
         <div className="input-footer">
           <span>{text.length}/1000</span>
 
-          <button
-            type="button"
-            disabled={!text.trim() || isLoading}
-            onClick={handleSummarise}
-          >
-            {isLoading ? "Summarising..." : "Summarise"}
-          </button>
+          <div className="button-group">
+            <button
+              className="secondary-button"
+              type="button"
+              disabled={!text && !summary}
+              onClick={handleClear}
+            >
+              Clear
+            </button>
+
+            <button
+              type="button"
+              disabled={!text.trim() || isLoading}
+              onClick={handleSummarise}
+            >
+              {isLoading ? "Summarising..." : "Summarise"}
+            </button>
+          </div>
         </div>
 
         {error && (
@@ -150,7 +180,13 @@ function App() {
 
         {summary && (
           <section className="result">
-            <h2>Summary</h2>
+            <div className="result-header">
+              <h2>Summary</h2>
+
+              <button className="secondary-button" type="button" onClick={handleCopy}>
+                Copy
+              </button>
+            </div>
             <p>{summary}</p>
           </section>
         )}
