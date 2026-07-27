@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 
 type SummaryResponse = {
@@ -90,7 +90,8 @@ function App() {
       });
 
       if (!response.ok) {
-        throw new Error(`Request failed with status ${response.status}`);
+        const message = await getErrorMessage(response);
+        throw new Error(message);
       }
 
       const data: SummaryResponse = await response.json();
@@ -128,6 +129,10 @@ function App() {
     setSummary("");
     setError("");
   }
+
+  useEffect(() => {
+    void loadHistory();
+  }, [])
 
   return (
     <main className="app">
