@@ -6,7 +6,7 @@ type SummaryResponse = {
 };
 
 type ErrorResponse = {
-  detail?: string;
+  detail?: string | Array<{ msg?: string }>;
 };
 
 type HistoryItem = {
@@ -27,13 +27,21 @@ function App() {
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
   const [historyError, setHistoryError] = useState("");
+  const [copied, setCopied] = useState(false);
 
-  async function getErrorMessage(response: Response) {
+  async function getErrorMessage(response: Response): Promise<string> {
     try {
       const errorData: ErrorResponse = await response.json();
 
-      if (errorData.detail) {
+      if (typeof errorData.detail === "string") {
         return errorData.detail;
+      }
+
+      if (Array.isArray(errorData.detail)) {
+        return errorData.detail
+          .map((error) => error.msg)
+          .filter(Boolean)
+          .join(" ");
       }
     } catch {
       // Server response was not JSON.
@@ -118,6 +126,12 @@ function App() {
 
     try {
       await navigator.clipboard.writeText(summary);
+
+      setCopied(true);
+
+      setTimeout(() => {
+        setCopied(false);
+      }, 1500);
     } catch (copyError) {
       console.error(copyError);
       setError("The summary could not be copied.");
@@ -188,8 +202,12 @@ function App() {
             <div className="result-header">
               <h2>Summary</h2>
 
-              <button className="secondary-button" type="button" onClick={handleCopy}>
-                Copy
+              <button
+                className="secondary-button"
+                type="button"
+                onClick={handleCopy}
+              >
+                {copied ? "Copied!" : "Copy"}
               </button>
             </div>
             <p>{summary}</p>

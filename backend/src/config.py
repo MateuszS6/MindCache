@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # --- api keys ---
-APP_API_KEY = os.getenv("APP_API_KEY")
+APP_API_KEY = os.getenv("APP_API_KEY") # Use if needed
 
 if not APP_API_KEY:
     raise ValueError("APP_API_KEY is not set")
