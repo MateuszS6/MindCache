@@ -1,9 +1,21 @@
+:root {
+  --colour-background: #f3f4f6;
+  --colour-surface: #ffffff;
+  --colour-text: #14213d;
+  --colour-muted: #667085;
+
+  --colour-accent: #5b5bd6;
+  --colour-accent-hover: #4949bd;
+
+  --colour-border: #d0d5dd;
+}
+
 .app {
   min-height: 100vh;
   display: grid;
   place-items: center;
   padding: 2rem;
-  background: #f3f4f6;
+  background: var(--colour-background);
   align-content: start;
   gap: 2rem;
 }
@@ -14,11 +26,20 @@
 
 .page-header h1 {
   margin: 0 0 0.5rem;
+  color: var(--colour-accent);
+  font-family: "Switzer", sans-serif;
+  font-weight: 600;
 }
 
 .page-header p {
   margin: 0;
-  color: #555;
+  color: var(--colour-muted);
+}
+
+.page-header p,
+.history-header p {
+  font-family: "Switzer", sans-serif;
+  font-weight: 400;
 }
 
 .summary-card,
@@ -31,13 +52,19 @@
   box-shadow: 0 12px 35px rgba(0, 0, 0, 0.08);
 }
 
+.summary-card label,
+.history-item h3 {
+  font-family: "Switzer", sans-serif;
+  font-weight: 600;
+}
+
 .summary-card h1 {
   margin-bottom: 0.5rem;
 }
 
-.summary-card > p {
+.summary-card>p {
   margin-bottom: 2rem;
-  color: #555;
+  color: var(--colour-muted);
 }
 
 .summary-card label {
@@ -51,7 +78,7 @@
   box-sizing: border-box;
   resize: vertical;
   padding: 1rem;
-  border: 1px solid #c9cdd3;
+  border: 1px solid var(--colour-border);
   border-radius: 10px;
   font: inherit;
 }
@@ -73,7 +100,7 @@ button {
   border: 1px solid transparent;
   border-radius: 8px;
   cursor: pointer;
-  font: inherit;
+  font-family: "Switzer", sans-serif;
   font-weight: 600;
   transition:
     background-color 0.15s ease,
@@ -83,14 +110,14 @@ button {
 }
 
 button:not(.secondary-button) {
-  background: #e5e7eb;
-  color: #111827;
+  background: var(--colour-accent);
+  color: white;
 }
 
 .secondary-button {
-  border-color: #c9cdd3;
-  background: white;
-  color: #1f2937;
+  border-color: var(--colour-border);
+  background: var(--colour-surface);
+  color: var(--colour-accent);
   min-width: 5.5rem;
 }
 
@@ -100,12 +127,13 @@ button:hover:not(:disabled) {
 }
 
 button:not(.secondary-button):hover:not(:disabled) {
-  background: #d1d5db;
+  background: var(--colour-accent-hover);
 }
 
 .secondary-button:hover:not(:disabled) {
-  background: #f3f4f6;
-  border-color: #9ca3af;
+  background: var(--colour-background);
+  color: var(--colour-accent-hover);
+  border-color: var(--colour-accent);
 }
 
 button:active:not(:disabled) {
@@ -137,7 +165,7 @@ button:disabled {
 }
 
 .result {
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--colour-border);
   background: #f9fafb;
 }
 
@@ -148,7 +176,7 @@ button:disabled {
 
 .result p {
   margin: 0;
-  color: #1f2937;
+  color: var(--colour-text);
   line-height: 1.6;
   white-space: pre-wrap;
 }
@@ -164,6 +192,8 @@ button:disabled {
 .result-header h2,
 .history-header h2 {
   margin: 0;
+  font-family: "Switzer", sans-serif;
+  font-weight: 600;
 }
 
 .history-header {
@@ -172,7 +202,7 @@ button:disabled {
 
 .history-header p {
   margin: 0.4rem 0 0;
-  color: #666;
+  color: var(--colour-muted);
 }
 
 .history-list {
@@ -182,7 +212,7 @@ button:disabled {
 
 .history-item {
   padding: 1.25rem;
-  border: 1px solid #d1d5db;
+  border: 1px solid var(--colour-border);
   border-radius: 10px;
   background: #f9fafb;
 }
@@ -200,7 +230,7 @@ button:disabled {
 }
 
 .history-date {
-  color: #6b7280;
+  color: var(--colour-muted);
   font-size: 0.85rem;
 }
 
