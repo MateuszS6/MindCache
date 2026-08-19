@@ -234,6 +234,34 @@ button:disabled {
   font-size: 0.85rem;
 }
 
+.app-footer {
+  width: min(100%, 760px);
+  box-sizing: border-box;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0 0.25rem;
+  color: var(--colour-muted);
+  font-family: "Switzer", sans-serif;
+  font-size: 0.85rem;
+}
+
+.app-footer nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.app-footer a {
+  color: var(--colour-accent);
+  text-decoration: none;
+}
+
+.app-footer a:hover {
+  color: var(--colour-accent-hover);
+  text-decoration: underline;
+}
+
 @media (max-width: 600px) {
   .app {
     padding: 1rem;
@@ -257,5 +285,10 @@ button:disabled {
 
   .button-group button {
     flex: 1;
+  }
+
+  .app-footer {
+    align-items: flex-start;
+    flex-direction: column;
   }
 }

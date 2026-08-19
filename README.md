@@ -4,11 +4,23 @@ _An AI-powered personal knowledge system using LLM summarisation, embeddings, an
 
 ## Overview
 
-MindCache is a production-minded AI summary service that consists of a backend service built with FastAPI that accepts text input, generates a concise AI-powered summary, stores the result in a PostgreSQL datanbase, and exposes endpoints for retrieving previous summaries.
+MindCache is a production-minded AI summary service that consists of a backend service built with FastAPI that accepts text input, generates a concise AI-powered summary, stores the result in a PostgreSQL database, and exposes endpoints for retrieving previous summaries.
 
 This project was created to practise building a realistic backend system using modern tools such as Docker, PostgreSQL, SQLAlchemy, and environment-based configuration.
 
 Personally, I wanted to take my Python skills to the next level, experiment with RESTful APIs, and learn containerisation and legimiate  deployment.
+
+## Screenshots
+
+### Main Interface
+![MindCache main interface](images/mindcache-interface.png)
+
+### Generated Summary
+![MindCache generated summary](images/mindcache-summary.png)
+
+### API
+###### _Summary Enpoint_
+![MindCache FastAPI docs](images/mindcache-api-summarise.png)
 
 ## Features
 
@@ -95,6 +107,10 @@ ai-summary-api/
 │
 ├── frontend/
 │   ├── src/
+│   │   ├── assets/fonts
+│   │   ├── App.tsx
+│   │   ├── App.css
+│   │   └── index.css
 │   ├── .env.example
 │   └── [Vite + React Components]
 │
@@ -154,21 +170,24 @@ docker compose down -v
 
 ## What I Learned
 
-This project helped me practise containerised backend development, API design, PostgreSQL persistence, and environment-based config.
-<!-- This is where you write your own section. Use bullet points, but make them specific. Examples: - How FastAPI routes map HTTP requests to Python functions - How PostgreSQL stores application data - How SQLAlchemy sessions are used to insert and query records - How Docker Compose runs multiple services together - Why environment variables are important for secret management - Why persistent volumes are needed for database containers - How health checks prevent the API from starting before the database is ready -->
+- How FastAPI routes map HTTP requests to Python functions
+- How PostgreSQL stores application data
+- How SQLAlchemy sessions are used to insert and query records
+- How Docker Compose runs multiple services together
+- Why environment variables are important for secret management
+- Why persistent volumes are needed for database containers
+- How health checks prevent the API from starting before the database is ready
 
 ## Current Limitations
 
 - Rate limiting is currently in-memory and resets when the API restarts
 - Full authentication is not yet implemented
 - The API currently supports text summarisation only
-- Database migrations are not yet managed with a migration tool such as Alembic
-<!-- This section is good. It shows maturity. Do not hide limitations. Show you understand them. -->
+- Database migrations are not yet managed
 
-## Planned Improvements
+## Future Improvements
 
 - Deploy the service to AWS
-- Add a simple frontend UI
 - Add proper user authentication
 - Add summary modes such as short, detailed, and bullet-point summaries
 - Add tagging or search for saved summaries
@@ -177,6 +196,5 @@ This project helped me practise containerised backend development, API design, P
 
 ## Status
 
-> [!NOTE]
-> This project is currently in active development, but feel free to browse through the repository.
+> This project has reached the end of `v1`.
 

@@ -257,6 +257,18 @@ function App() {
           ))}
         </div>
       </section>
+
+      <footer className="app-footer">
+        <span>Built by Mateusz Stepien</span>
+        <nav aria-label="Social links">
+          <a href="https://github.com/MateuszS6" target="_blank" rel="noreferrer">
+            GitHub
+          </a>
+          <a href="https://www.linkedin.com/in/matz-stepien" target="_blank" rel="noreferrer">
+            LinkedIn
+          </a>
+        </nav>
+      </footer>
     </main>
   );
 }
